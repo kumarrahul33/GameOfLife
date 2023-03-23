@@ -60,15 +60,19 @@ class Game{
                 }
             }
 
+
             int size_of_input;
             std:: cin >> size_of_input;
-            std::cout << size_of_input << std::endl;
+            // std::cout << size_of_input << std::endl;
 
             int x, y;
             for (int i = 0; i < size_of_input; i++)
             {
+
                 std::cin >> x >> y;
-                std::cout << x << " - " << y << "--" << std::endl;
+                // std::cout << "here" << std::endl;
+                // std::cout << x << " - " << y << std::endl;
+                // std::cout << x << " - " << y << "--" << std::endl;
                 matrix[x][y] = 1;
             }
             // take input from the user
@@ -83,7 +87,6 @@ class Game{
                 for (int j = 0; j < 200; j++)
                 {
                     if(god(i, j) == 1){
-                    // std::cout << "checking on : " << i << " - " << j << std::endl;
                         temp[i][j] = 1;
                     }
                     else{
@@ -154,11 +157,11 @@ class GameOfLife1: public Game{
 
         int god(int x, int y){
             int count = check_immediate_alive(x, y);
-            if(count == 2){
-                return matrix[x][y];
+            if(count == 3 || count == 5 || count == 7){
+                return 1;
             }
 
-            else return !matrix[x][y];
+            else return 0;
         }
 };
 
@@ -175,10 +178,22 @@ class GameOfLife2: public Game{
         }
 };
 
+class GameOfLife3: public Game{
+    public:
+        int god(int x, int y){
+            int count = check_immediate_alive(x, y);
+            if(count % 3 == 0 && count != 0 ){
+                return 1;
+            }
+            else{
+                return 0;
+            }
+        }
+};
+
 int main(){
-    GameOfLife game;
-    game.print();
-    game.print();
+    GameOfLife1 game;
+    // std::cout << "here" << std::endl;
     // std::cout << std::endl << std::endl;
     for(int i=0; i<100; i++){
         game.run_game_iteration();

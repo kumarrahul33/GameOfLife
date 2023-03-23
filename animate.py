@@ -3,6 +3,9 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 import numpy as np
 
+def remove_useless_line(list,item):
+    res = [i for i in list if i != item]
+    return res
 
 
 def take_input():
@@ -14,9 +17,30 @@ def take_input():
         lines = [line.strip(",") for line in lines]
         lines = [line.split(",") for line in lines]
         lines = [[point.split("-") for point in point_xy] for point_xy in lines]
+        # print(lines[1].count(['']))
+        # for line in lines:
+        #     for point in line:
+        #             if point==['']:
+        #                 print(lines.index(line))
+        #                 print(line.index(point))
+        #                 print('empty')
+        # print(lines[2])
+        # print(len(lines))
+        lines = remove_useless_line(lines,[['']])
+        # print(lines[2])
+        # print(len(lines))
+        # for line in lines:
+        #     for point in line:
+        #         for i in range(len(point)):
+        #             try:
+        #                 point[i] = int(point[i])
+        #             except:
+        #                 print(point)
+        #                 print('error')
         lines = [[[int(point[0]), int(point[1])] for point in point_xy] for point_xy in lines]
+        # lines.remove([''])
 
-        print(lines[0])
+        # print(lines[0])
         return lines
         # print(int(lines[0][0][0]))
 

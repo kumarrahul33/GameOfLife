@@ -1,6 +1,6 @@
 import random
-size = random.randint(40, 180) 
-points = [[random.randint(0, 200), random.randint(0, 200)] for i in range(size)]
+size = random.randint(10000, 30000) 
+points = [[random.randint(0, 199), random.randint(0, 199)] for i in range(size)]
 
 with open("input.txt", "w") as file:
     file.write(str(size) + "\n")
