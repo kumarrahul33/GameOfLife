@@ -182,22 +182,18 @@ class GameOfLife3: public Game{
     public:
         int god(int x, int y){
             int count = check_immediate_alive(x, y);
-            if(count % 3 == 0 && count != 0 ){
-                return 1;
-            }
-            else{
-                return 0;
-            }
+            if(count == 3 && count != 0 && matrix[x][y] == 0 ) return 1;
+            else if( matrix[x][y] == 0 && count == 4) return 1;
+            else if(matrix[x][y] == 1 && count == 2) return 0;
+            else return 0;
+            
         }
 };
 
 int main(){
-    GameOfLife1 game;
-    // std::cout << "here" << std::endl;
-    // std::cout << std::endl << std::endl;
+    GameOfLife3 game;
     for(int i=0; i<100; i++){
         game.run_game_iteration();
-        // std::cout << std::endl << std::endl;
     }
     return 0;
 }
