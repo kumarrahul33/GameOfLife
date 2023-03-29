@@ -3,12 +3,12 @@
 class GameBoard
 {
     private:
-        bool matrix[200][200];
+        bool matrix[100][100];
 
     public:
         GameBoard(/* args */){
-            for(int i=0; i<200; i++){
-                for(int j=0; j<200; j++){
+            for(int i=0; i<100; i++){
+                for(int j=0; j<100; j++){
                     matrix[i][j] = 0;
                 }
             }
@@ -23,8 +23,8 @@ class GameBoard
         }
 
         void print_frame(){
-            for(int i=0; i<200; i++){
-                for(int j=0; j<200; j++){
+            for(int i=0; i<100; i++){
+                for(int j=0; j<100; j++){
                     // char a = (matrix[i][j])? '#' : '.';
                     // std::cout << a;
                     if(matrix[i][j] == 1){
@@ -92,7 +92,7 @@ class GameLogic{
             for(int i=0; i<8; i++){
                 int x1 = x + points[i*2];
                 int y1 = y + points[i*2+1];
-                if(x1 >= 0 && x1 < 200 && y1 >= 0 && y1 < 200){
+                if(x1 >= 0 && x1 < 100 && y1 >= 0 && y1 < 100){
                     if(board->get_cell_state(x1,y1) == 1){
                         count++;
                     }
@@ -147,8 +147,8 @@ class GameOfLife{
             // this->logic = new God0();
             // this->logic = new GameLogic();
 
-            for(int i=0; i<200; i++){
-                for(int j=0; j<200; j++){
+            for(int i=0; i<100; i++){
+                for(int j=0; j<100; j++){
                     this->board->set_cell_state(i,j,0);
                 }
             }
@@ -166,16 +166,16 @@ class GameOfLife{
         };
 
         void run_frame(){
-            bool temp[200][200];
-            for(int i=0; i<200; i++){
-                for(int j=0; j<200; j++){
+            bool temp[100][100];
+            for(int i=0; i<100; i++){
+                for(int j=0; j<100; j++){
                     int state = logic->god(board,i,j);
                     temp[i][j] = state;
                 }
             }
 
-            for(int i=0; i<200; i++){
-                for(int j=0; j<200; j++){
+            for(int i=0; i<100; i++){
+                for(int j=0; j<100; j++){
                     this->board->set_cell_state(i,j,temp[i][j]);
                 }
             }
@@ -189,7 +189,7 @@ class GameOfLife{
 };
 
 int main(){
-    GameOfLife game(1);
+    GameOfLife game(0);
     game.start_game();
     return 0;
 }
