@@ -1,110 +1,28 @@
 #include<iostream>
 
-class Game{
-    protected:
-        int matrix[200][200];
-
-        virtual int god(int x, int y) = 0;
-
-        int points[16] = {
-            -1, -1,
-            -1, 0,
-            -1, 1,
-            0, -1,
-            0, 1,
-            1, -1,
-            1, 0,
-            1, 1
-        };
-
-        int check_immediate_alive(int x, int y){
-            int count = 0;
-            int points_to_check[16];
-            for(int i=0; i<8; i++){
-                points_to_check[i*2] = -1;
-                points_to_check[i*2+1] = -1;
-
-                int _x = x + points[i*2];
-                int _y = y + points[i*2 + 1];
-
-                if(!(_x >= 200 || _x < 0 || _y >= 200 || _y < 0)){
-                    points_to_check[i*2] = _x;
-                    points_to_check[i*2 + 1] = _y;
-                }
-            }
-
-            for (int i=0; i < 16; i+=2)
-            {
-                if(points_to_check[i] != -1 && points_to_check[i+1] != -1){
-                    if(matrix[points_to_check[i]][points_to_check[i+1]] == 1){
-                        // std::cout << "found one at : " << points_to_check[i] << " - " << points_to_check[i+1] << std::endl;
-                        count++;
-                    }
-                }
-            }
-
-            if(x == 99 && y == 101){
-                for (int i = 0; i < 16; i+=2)
-                {
-                    // std::cout << "points to check:" << points_to_check[i] << " - " << points_to_check[i+1] << std::endl;
-                }
-            }
-            return count;
-        };
+class GameBoard
+{
+    private:
+        bool matrix[200][200];
 
     public:
-        Game(){
+        GameBoard(/* args */){
             for(int i=0; i<200; i++){
                 for(int j=0; j<200; j++){
                     matrix[i][j] = 0;
                 }
             }
+        };
 
-
-            int size_of_input;
-            std:: cin >> size_of_input;
-            // std::cout << size_of_input << std::endl;
-
-            int x, y;
-            for (int i = 0; i < size_of_input; i++)
-            {
-
-                std::cin >> x >> y;
-                // std::cout << "here" << std::endl;
-                // std::cout << x << " - " << y << std::endl;
-                // std::cout << x << " - " << y << "--" << std::endl;
-                matrix[x][y] = 1;
-            }
-            // take input from the user
+        int get_cell_state(int x, int y){
+            return matrix[x][y];
         }
 
-
-
-        void run_game_iteration(){
-            int temp[200][200];
-            for (int i = 0; i < 200; i++)
-            {
-                for (int j = 0; j < 200; j++)
-                {
-                    if(god(i, j) == 1){
-                        temp[i][j] = 1;
-                    }
-                    else{
-                        temp[i][j] = 0;
-                    }
-                }
-            }
-
-            for(int i=0; i<200; i++){
-                for(int j=0; j<200; j++){
-                    matrix[i][j] = temp[i][j];
-                }
-            }
-
-            print();
+        void set_cell_state(int x, int y, int state){
+            matrix[x][y] = state;
         }
 
-        void print(){
+        void print_frame(){
             for(int i=0; i<200; i++){
                 for(int j=0; j<200; j++){
                     // char a = (matrix[i][j])? '#' : '.';
@@ -118,18 +36,31 @@ class Game{
             }
             std::cout << std::endl;
         }
+
 };
 
-class GameOfLife: public Game{
-    public:
-        int god(int x, int y){
-            int count = check_immediate_alive(x, y);
-            if(x == 99 && y == 101){
-                // std::cout << x << " - " << y << std::endl;
-                // std::cout << count << std::endl;
-            }
 
-            if(matrix[x][y] == 1){
+class GameLogic{
+    protected:
+        int points[16] = {
+            -1, -1,
+            -1, 0,
+            -1, 1,
+            0, -1,
+            0, 1,
+            1, -1,
+            1, 0,
+            1, 1
+        };
+    public:
+        GameLogic(){};
+        // int god(GameBoard* board,int x, int y){
+
+        // };
+        virtual int god(GameBoard* board,int x, int y){
+            int count = check_immediate_alive_neighbours(board,x, y);
+
+            if(board->get_cell_state(x,y) == 1){
                 if(count == 2 || count == 3){
                     // std::cout << x << " - " << y << std::endl;
                     // std::cout << x << " - " << y << std::endl;
@@ -150,25 +81,31 @@ class GameOfLife: public Game{
                 }
             }
         }
-};
 
-class GameOfLife1: public Game{
-    public:
-
-        int god(int x, int y){
-            int count = check_immediate_alive(x, y);
-            if(count == 3 || count == 5 || count == 7){
-                return 1;
+        int check_immediate_alive_neighbours(GameBoard* board,int x, int y){
+            int count = 0;
+            int points_to_check[16];
+            for(int i=0; i<8; i++){
+                points_to_check[i*2] = -1;
+                points_to_check[i*2+1] = -1;
             }
-
-            else return 0;
+            for(int i=0; i<8; i++){
+                int x1 = x + points[i*2];
+                int y1 = y + points[i*2+1];
+                if(x1 >= 0 && x1 < 200 && y1 >= 0 && y1 < 200){
+                    if(board->get_cell_state(x1,y1) == 1){
+                        count++;
+                    }
+                }
+            }
+            return count;
         }
 };
 
-class GameOfLife2: public Game{
+class God1: public GameLogic{
     public:
-        int god(int x, int y){
-            int count = check_immediate_alive(x, y);
+        int god(GameBoard* board,int x, int y){
+            int count = check_immediate_alive_neighbours(board,x, y);
             if(count > 3 and count < 7 ){
                 return 1;
             }
@@ -178,22 +115,81 @@ class GameOfLife2: public Game{
         }
 };
 
-class GameOfLife3: public Game{
+class God2: public GameLogic{
     public:
-        int god(int x, int y){
-            int count = check_immediate_alive(x, y);
-            if(count == 3 && count != 0 && matrix[x][y] == 0 ) return 1;
-            else if( matrix[x][y] == 0 && count == 4) return 1;
-            else if(matrix[x][y] == 1 && count == 2) return 0;
+        int god(GameBoard* board,int x, int y){
+            int count = check_immediate_alive_neighbours(board,x, y);
+            if(count == 3 || count == 5 || count == 7){
+                return 1;
+            }
+
             else return 0;
-            
+        }
+};
+
+class GameOfLife{
+    private:
+        GameBoard* board;
+        GameLogic* logic;
+    public:
+        GameOfLife(int logic_type){
+            this->board = new GameBoard();
+
+            if(logic_type == 1){
+                this->logic = new God1();
+            }
+            else if(logic_type == 2){
+                this->logic = new God2();
+            }
+            else{
+                this->logic = new GameLogic();
+            }
+            // this->logic = new God0();
+            // this->logic = new GameLogic();
+
+            for(int i=0; i<200; i++){
+                for(int j=0; j<200; j++){
+                    this->board->set_cell_state(i,j,0);
+                }
+            }
+
+
+            int size_of_input;
+            std:: cin >> size_of_input;
+
+            int x, y;
+            for (int i = 0; i < size_of_input; i++)
+            {
+                std::cin >> x >> y;
+                this->board->set_cell_state(x,y,1);
+            }
+        };
+
+        void run_frame(){
+            bool temp[200][200];
+            for(int i=0; i<200; i++){
+                for(int j=0; j<200; j++){
+                    int state = logic->god(board,i,j);
+                    temp[i][j] = state;
+                }
+            }
+
+            for(int i=0; i<200; i++){
+                for(int j=0; j<200; j++){
+                    this->board->set_cell_state(i,j,temp[i][j]);
+                }
+            }
+        }
+        void start_game(){
+           for(int i=0; i<100; i++){
+               run_frame();
+               this->board->print_frame();
+           }
         }
 };
 
 int main(){
-    GameOfLife3 game;
-    for(int i=0; i<100; i++){
-        game.run_game_iteration();
-    }
+    GameOfLife game(1);
+    game.start_game();
     return 0;
 }

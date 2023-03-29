@@ -1,2 +1,2 @@
 g++ game_of_life.cpp
-./a.out < input.txt > output.txt
+./a.out < glider.txt > output.txt
