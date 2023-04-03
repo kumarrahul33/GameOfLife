@@ -3,6 +3,8 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 import numpy as np
 
+SIZE_OF_MATRIX = 256
+
 def remove_useless_line(list,item):
     res = [i for i in list if i != item]
     return res
@@ -28,9 +30,8 @@ points = take_input()
 fig, ax = plt.subplots()
 
 def update(i):
-    size = 256 
     ax.cla()
-    mat = np.zeros((size,size))
+    mat = np.zeros((SIZE_OF_MATRIX,SIZE_OF_MATRIX))
     for point in points[i]:
         mat[point[0],[point[1]]] = 1
     ax.imshow(mat)
