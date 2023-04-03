@@ -16,7 +16,7 @@ def take_input():
         lines = [line.strip() for line in lines]
         lines = [line.strip(",") for line in lines]
         lines = [line.split(",") for line in lines]
-        lines = [[point.split("-") for point in point_xy] for point_xy in lines]
+        lines = [[point.split(" ") for point in point_xy] for point_xy in lines]
         lines = remove_useless_line(lines,[['']])
         lines = [[[int(point[0]), int(point[1])] for point in point_xy] for point_xy in lines]
 
@@ -28,15 +28,16 @@ points = take_input()
 fig, ax = plt.subplots()
 
 def update(i):
+    size = 256 
     ax.cla()
-    mat = np.zeros((100,100))
+    mat = np.zeros((size,size))
     for point in points[i]:
         mat[point[0],[point[1]]] = 1
     ax.imshow(mat)
     ax.set_axis_off()
 
 
-anim = FuncAnimation(fig, update, frames=range(len(points)), interval=100)
+anim = FuncAnimation(fig, update, frames=range(len(points)), interval=10)
 
 plt.show()
 
